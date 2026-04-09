@@ -77,28 +77,36 @@ exports.handler = async (event, context) => {
               type: 'text',
               text: `Analiza esta ficha técnica de Kulkana y extrae TODOS los datos disponibles.
 
+IMPORTANTE: 
+- El nombre del proyecto puede estar como "Macrolote X - Lote Y" o "MZ X LT Y"
+- El identificador puede estar como "SM57-MZ17-LT05" o similar
+- Si ves "—" (guión) o campo vacío, usa null
+- Si hay "Restricción Posterior", úsala para "restriccionLateral"
+
 Responde SOLO con un objeto JSON válido, sin explicaciones, sin markdown, sin bloques de código.
 
 {
-  "nombreProyecto": "nombre del macrolote/lote (string)",
-  "identificador": "código/identificador (string)",
-  "superficieTotal": número_sin_comas,
-  "usoSuelo": "tipo de uso (string)",
+  "nombreProyecto": "nombre del macrolote/lote (puede ser 'MZ 17 - LT 05' o similar)",
+  "identificador": "código como SM57-MZ17-LT05",
+  "superficieTotal": número_sin_comas_ni_separadores,
+  "usoSuelo": "tipo de uso (ej: Urbano / Mixto)",
   "precioM2": número_sin_comas,
   "precioTotal": número_sin_comas,
-  "estatus": "estado del proyecto (string)",
-  "fechaEntrega": "fecha de entrega (string)",
-  "cos": "coeficiente de ocupación (string)",
-  "cus": "coeficiente de utilización (string)",
-  "nivelesMaximos": "niveles permitidos (string)",
-  "topografia": "descripción topografía (string)",
-  "restriccionFrontal": "restricción frontal (string)",
-  "restriccionLateral": "restricción lateral (string)"
+  "estatus": "estado (DISPONIBLE, VENDIDO, etc)",
+  "fechaEntrega": "fecha de entrega",
+  "cos": "coeficiente de ocupación o null si es —",
+  "cus": "coeficiente de utilización o null si es —",
+  "nivelesMaximos": "niveles permitidos o null si es —",
+  "topografia": "descripción topografía",
+  "restriccionFrontal": "restricción frontal con unidad (ej: 1.50 m)",
+  "restriccionLateral": "restricción lateral O posterior si existe (con unidad)"
 }
 
 CRÍTICO:
-- Números SIN comas, puntos, símbolos de moneda, ni separadores
-- Si un dato no existe, usa null
+- Números SIN comas, puntos, símbolos ($, MXN), ni separadores
+- Superficie de "40,366 m²" debe ser: 40366
+- Precio de "$129,171,200 MXN" debe ser: 129171200
+- Si un dato no existe o es "—", usa null
 - Responde SOLO el JSON, nada más`
             }
           ]
