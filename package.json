@@ -1,0 +1,8 @@
+{
+  "name": "kulkana-generator",
+  "version": "1.0.0",
+  "description": "Generador de Presentaciones Kulkana",
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  }
+}
