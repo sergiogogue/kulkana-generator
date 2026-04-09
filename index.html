@@ -646,28 +646,35 @@
 
         <!-- MAIN CONTENT -->
         <main class="content">
-            <!-- SECCIÓN: EXTRACCIÓN PDF -->
+            <!-- SECCIÓN: INICIO -->
             <div class="section active" id="section-extraccion">
                 <div class="section-header">
-                    <h2 class="section-title">📄 Extracción Automática</h2>
-                    <p class="section-desc">Sube la ficha técnica en PDF para extraer los datos automáticamente</p>
+                    <h2 class="section-title">🏠 Bienvenido al Generador Kulkana</h2>
+                    <p class="section-desc">Crea presentaciones profesionales de 20 slides en minutos</p>
                 </div>
-
-                <div id="alertExtraccion" class="alert"></div>
 
                 <div class="card">
-                    <div class="card-title">📋 Ficha Técnica PDF</div>
-                    <input type="file" id="pdfFile" accept="application/pdf" style="display: none;" onchange="handlePdfUpload(event)">
-                    <div class="file-zone" id="pdfZone" onclick="document.getElementById('pdfFile').click()">
-                        <div class="file-icon">📁</div>
-                        <div class="file-text">Arrastra tu PDF o haz clic para seleccionar</div>
-                        <div class="file-hint">Ficha técnica del proyecto en formato PDF</div>
-                        <div id="pdfFileName" class="file-name" style="display: none;"></div>
+                    <div class="card-title">✨ Instrucciones Rápidas</div>
+                    <div style="line-height: 1.8;">
+                        <p><strong>1.</strong> Completa los datos del proyecto en la pestaña <strong>🏗️ Proyecto</strong></p>
+                        <p><strong>2.</strong> Sube los planos en la pestaña <strong>🗺️ Planos</strong></p>
+                        <p><strong>3.</strong> Añade características en <strong>⭐ Características</strong></p>
+                        <p><strong>4.</strong> Define el esquema de pago en <strong>💰 Esquema Pago</strong></p>
+                        <p><strong>5.</strong> Click en <strong>"Generar Presentación"</strong> abajo</p>
                     </div>
-                    <button class="btn btn-primary btn-block btn-lg" id="btnExtract" disabled onclick="extractDataFromPdf()" style="margin-top: 1rem;">
-                        🤖 Extraer Datos Automáticamente
-                    </button>
                 </div>
+
+                <div class="card" style="background: #d4edda; border-color: #c3e6cb;">
+                    <div class="card-title" style="color: #155724;">✅ Versión Standalone</div>
+                    <p style="color: #155724; margin: 0;">
+                        Esta versión no requiere backend ni configuración adicional. 
+                        Llena los campos manualmente y genera tu presentación al instante.
+                    </p>
+                </div>
+
+                <button class="btn btn-primary btn-block btn-lg" onclick="showSection('proyecto')" style="margin-top: 1rem;">
+                    🚀 Comenzar a Crear Presentación
+                </button>
             </div>
 
             <!-- SECCIÓN: PROYECTO -->
@@ -993,18 +1000,17 @@
                     })
                 });
 
-                const data = await response.json();
+                const result = await response.json();
                 
-                if (!response.ok) {
+                if (!response.ok || !result.success) {
                     if (response.status === 401) {
                         throw new Error('API Key inválida. Verifica tu key en console.anthropic.com');
                     }
-                    throw new Error(data.error?.message || data.error || 'Error en la API');
+                    throw new Error(result.error || 'Error en la extracción');
                 }
 
-                const textContent = data.content.filter(i => i.type === "text").map(i => i.text).join("");
-                const cleanJson = textContent.replace(/```json|```/g, '').trim();
-                const extractedData = JSON.parse(cleanJson);
+                // La Netlify Function devuelve { success: true, data: extractedData }
+                const extractedData = result.data;
 
                 // Llenar campos
                 Object.keys(extractedData).forEach(key => {
